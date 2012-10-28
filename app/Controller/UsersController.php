@@ -12,7 +12,7 @@
 class UsersController extends AppController {
     
     public $publicActions = array('register');
-    
+
     public function beforeRender() {
         parent::beforeRender();
         if ($this->request->params['action'] == 'admin_login')
@@ -41,17 +41,17 @@ class UsersController extends AppController {
     }
 
     public function register() {
+       	$this->set('cities',$this->User->State->find('threaded'));
         $this->set('title_for_layout', 'ثبت نام در سیستم');
         if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('ثبت نام شما تکمیل شد. می توانید وارد شوید'), 'default', array('class' => 'alert alert-success', 'id' => 'error'));
-                $this->redirect(array('action' => 'login', 'admin' => TRUE));
+                $this->redirect(array('controller' => 'dashboards', 'action' => 'index'));
             } else {
                 $this->Session->setFlash(SettingsController::read('Error.Code-13'), 'message', array('type' => 'error'));
             }
         }
-        $this->layout = 'login';
     }
 
 }

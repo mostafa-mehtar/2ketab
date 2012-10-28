@@ -59,4 +59,32 @@ class AppModel extends Model {
         }
         return true;
     }
+    
+    /**
+     * find State and City for gived result
+     *      this method find 'city' index in result array and add two index 'State','City' to result array that this
+     * notice : this Model must has accociate with State Model  
+     * 
+     * @param array $result this param must contain city index
+     */
+    protected function _getCityInfo(&$result){
+        if(empty($result['city'])){
+            return ;
+        }
+        $city = $this->State->find('first',array(
+            'conditions' => array(
+                'id' => $result['city']
+            ),
+        )
+        );
+        $result['City'] = $city['State'];
+        
+        $state = $this->State->find('first',array(
+            'conditions' => array(
+                'id' => $city['State']['parent_id']
+            ),
+            )
+        );  
+        $result['State'] = $state['State'];  
+    }
 }
